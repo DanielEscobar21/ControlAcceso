@@ -28,11 +28,18 @@ class UsuarioDao {
         $activo = $usuario->getActivo();
         $rol = $usuario->getRol();
 
-        $csql = "INSERT INTO usuario (alias, contrasena, nombre, apellidos, activo, rol) 
-                            VALUES ('$alias', '$contraseña','$nombre', '$apellidos', $activo, '$rol')";
-        
         $conexion = $this->conectar();
-        $resultado = $conexion->query($csql);
-        return $resultado;
+
+        $q = "SELECT * FROM usuario WHERE alias = '$alias'";
+        $existe = $conexion->query($q);
+        if($existe->num_rows==0){
+            $csql = "INSERT INTO usuario (alias, contrasena, nombre, apellidos, activo, rol) 
+            VALUES ('$alias', '$contraseña','$nombre', '$apellidos', $activo, '$rol')";
+            $resultado = $conexion->query($csql);
+            return $resultado;
+        }else{
+            print("El usuario ya existe");
+        }        
+        
     }
 }
